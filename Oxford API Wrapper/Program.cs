@@ -11,6 +11,8 @@ namespace OxfordAPIWrapper
             OxfordApiWrapper wrapper = new OxfordApiWrapper(SecretStore.APP_KEY, SecretStore.APP_ID);
             var languages = await wrapper.GetLanguages();
             var bilingualDicts = languages.Results.Where(x => x.Type == OxfordDictionaryType.Bilingual);
+
+            var catInSpanish = (await wrapper.GetTranslations("cat", "en", "es")).GetTranslations();
             ;
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using OxfordAPIWrapper.Translations;
 
 namespace OxfordAPIWrapper
 {
@@ -21,7 +21,7 @@ namespace OxfordAPIWrapper
 
         public async Task<LanguagesQueryResult> GetLanguages()
         {
-            using(var client = new HttpClient())
+            using (var client = new HttpClient())
             {
                 var targetUrl = Flurl.Url.Combine(baseUrl, "/languages");
                 client.DefaultRequestHeaders.Add("app_id", AppId);
@@ -32,5 +32,26 @@ namespace OxfordAPIWrapper
                 return result;
             }
         }
+
+        public async Task<TranslationQueryResult> GetTranslations(string word, string sourceLanguage, string targetLanguage)
+        {
+            using (var client = new HttpClient())
+            {
+                var targetUrl = Flurl.Url.Combine(baseUrl, $"/entries/{sourceLanguage}/{word}/translations={targetLanguage}");
+                client.DefaultRequestHeaders.Add("app_id", AppId);
+                client.DefaultRequestHeaders.Add("app_key", AppKey);
+                var response = client.GetAsync(targetUrl);
+                var responseContent = await response.Result.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<TranslationQueryResult>(responseContent);
+                return result;
+            }
+        }
     }
+}
+
+
+namespace OxfordAPIWrapper.Lemmatron
+
+{
+
 }
