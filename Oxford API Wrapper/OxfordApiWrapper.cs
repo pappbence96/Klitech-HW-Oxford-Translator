@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using OxfordAPIWrapper.Translations;
+using OxfordAPIWrapper.Languages;
+using OxfordAPIWrapper.Lemmatron;
 
 namespace OxfordAPIWrapper
 {
@@ -46,12 +48,25 @@ namespace OxfordAPIWrapper
                 return result;
             }
         }
+
+        public async Task<LemmatronQueryResult> GetLemmas(string word, string language)
+        {
+            using (var client = new HttpClient())
+            {
+                var targetUrl = Flurl.Url.Combine(baseUrl, $"/inflections/{language}/{word}");
+                client.DefaultRequestHeaders.Add("app_id", AppId);
+                client.DefaultRequestHeaders.Add("app_key", AppKey);
+                var response = client.GetAsync(targetUrl);
+                var responseContent = await response.Result.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<LemmatronQueryResult>(responseContent);
+                return result;
+            }
+        }
     }
 }
 
 
 namespace OxfordAPIWrapper.Lemmatron
-
 {
 
 }

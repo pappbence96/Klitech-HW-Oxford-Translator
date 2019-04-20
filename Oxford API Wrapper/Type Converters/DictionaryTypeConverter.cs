@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using OxfordAPIWrapper.Languages;
 
 namespace OxfordAPIWrapper.TypeConverters
 {
