@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OxfordAPIWrapper
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            OxfordApiWrapper wrapper = new OxfordApiWrapper(SecretStore.APP_KEY, SecretStore.APP_ID);
+            var languages = await wrapper.GetLanguages();
+            var bilingualDicts = languages.Results.Where(x => x.Type == OxfordDictionaryType.Bilingual);
+            ;
         }
     }
 }

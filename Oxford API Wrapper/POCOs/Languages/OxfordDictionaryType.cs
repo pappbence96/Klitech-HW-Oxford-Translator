@@ -1,0 +1,1 @@
+﻿public enum OxfordDictionaryType { Monolingual, Bilingual }
