@@ -1,1 +1,4 @@
-﻿public enum OxfordDictionaryType { Monolingual, Bilingual }
+﻿namespace OxfordAPIWrapper.Languages
+{
+    public enum OxfordDictionaryType { Monolingual, Bilingual }
+}

@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
-public class LanguagesQueryResult
+namespace OxfordAPIWrapper.Languages
 {
-    public Metadata Metadata { get; set; }
-    public List<OxfordDictionary> Results { get; set; }
+    public class LanguagesQueryResult
+    {
+        public Metadata Metadata { get; set; }
+        public List<OxfordDictionary> Results { get; set; }
+    }
 }

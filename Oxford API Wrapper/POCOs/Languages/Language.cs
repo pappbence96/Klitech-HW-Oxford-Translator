@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-public class Language
+namespace OxfordAPIWrapper.Languages
 {
-    public string Id { get; set; }
+    public class Language
+    {
+        public string Id { get; set; }
 
-    [JsonProperty("language")]
-    public string Name { get; set; }
+        [JsonProperty("language")]
+        public string Name { get; set; }
+    }
 }
