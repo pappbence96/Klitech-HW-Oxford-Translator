@@ -1,4 +1,4 @@
-﻿using OxfordAPIWrapper.Languages;
+﻿using OxfordAPIWrapper.Objects;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,14 +10,12 @@ namespace OxfordAPIWrapper
         static async Task Main(string[] args)
         {
             OxfordApiWrapper wrapper = new OxfordApiWrapper(SecretStore.APP_KEY, SecretStore.APP_ID);
-            /*var languages = await wrapper.GetLanguages();
-            var bilingualDicts = languages.Results.Where(x => x.Type == OxfordDictionaryType.Bilingual);*/
-
-            //var catInSpanish = (await wrapper.GetTranslations("cat", "en", "es")).GetTranslations();
-
-            //var lemmasOfSpacing = (await wrapper.GetLemmas("spacing", "en")).GetRoots();
-
-
+            //var cool = await wrapper.GetTranslations("cool", "en", "es");
+            //var lemma = await wrapper.GetLemmas("infected", "en");
+            //var examples = await wrapper.GetExamples("infect", "en");
+            //var synonyms = await wrapper.GetSynonyms("cool", "en");
+            //var antonyms = await wrapper.GetAntonyms("cool", "en");
+            var dicts = await wrapper.GetDictionaries();
             ;
         }
     }

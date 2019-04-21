@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace OxfordAPIWrapper.Languages
+namespace OxfordAPIWrapper.Objects
 {
     public class Language
     {
