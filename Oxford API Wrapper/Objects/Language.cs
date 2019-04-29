@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace OxfordAPIWrapper.Objects
 {
+    /// <summary>
+    /// Language class representing a language supported by the API
+    /// </summary>
     public class Language
     {
         public string Id { get; set; }

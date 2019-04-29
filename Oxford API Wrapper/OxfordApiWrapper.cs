@@ -9,6 +9,10 @@ using OxfordAPIWrapper.Objects;
 
 namespace OxfordAPIWrapper
 {
+    /// <summary>
+    /// A concrete implementation of the IOxfordApiWrapper interface.
+    /// Uses HttpClient to communicate with the API.
+    /// </summary>
     public class OxfordApiWrapper : IOxfordApiWrapper
     {
         private string baseUrl = "https://od-api.oxforddictionaries.com/api/v1";
@@ -28,6 +32,12 @@ namespace OxfordAPIWrapper
             AppId = SecretStore.APP_ID;
         }
 
+        
+        /// <summary>
+        /// Constructs a query to the given endpoint, launches it on a background thread, then returns with the response content 
+        /// </summary>
+        /// <param name="url">Endpoint URL</param>
+        /// <returns>Response content. Empty string on Status Codes other than 2xx</returns>
         private async Task<string> GetResponseString(string url)
         {
             using (var client = new HttpClient())
