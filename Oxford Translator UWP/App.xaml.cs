@@ -1,4 +1,6 @@
 ﻿using Microsoft.Practices.Unity;
+using Oxford_Translator_UWP.Interfaces;
+using Oxford_Translator_UWP.Services;
 using OxfordAPIWrapper;
 using Prism.Events;
 using Prism.Unity.Windows;
@@ -32,12 +34,24 @@ namespace Oxford_Translator_UWP
             this.InitializeComponent();
         }
 
+        protected override Task OnInitializeAsync(IActivatedEventArgs args)
+        {
+            Container.RegisterType<IOxfordApiWrapper, OxfordApiWrapper>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IDialogService, DialogService>(new ContainerControlledLifetimeManager());
+            return Task.FromResult<object>(null);
+        }
+
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
-            Container.RegisterInstance(typeof(IOxfordApiWrapper), new OxfordApiWrapper());
             NavigationService.Navigate(PageToken.Translator.ToString(), null);
             return Task.FromResult<object>(null);
         }
+
+        protected override object Resolve(Type t)
+        {
+            return base.Resolve(t);
+        }
+
         protected override UIElement CreateShell(Frame rootFrame)
         {
             var shell = Container.Resolve<AppShell>();
