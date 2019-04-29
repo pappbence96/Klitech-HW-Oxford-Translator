@@ -20,12 +20,6 @@ namespace OxfordAPIWrapper
         public string AppKey { get; private set; }
         public string AppId { get; private set; }
 
-        public OxfordApiWrapper(string appKey, string appId)
-        {
-            AppKey = appKey;
-            AppId = appId;
-        }
-
         public OxfordApiWrapper()
         {
             AppKey = SecretStore.APP_KEY;

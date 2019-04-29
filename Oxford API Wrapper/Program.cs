@@ -9,7 +9,7 @@ namespace OxfordAPIWrapper
     {
         static async Task Main(string[] args)
         {
-            OxfordApiWrapper wrapper = new OxfordApiWrapper(SecretStore.APP_KEY, SecretStore.APP_ID);
+            OxfordApiWrapper wrapper = new OxfordApiWrapper();
             //var cool = await wrapper.GetTranslations("cool", "en", "es");
             //var lemma = await wrapper.GetLemmas("infected", "en");
             //var examples = await wrapper.GetExamples("infect", "en");
