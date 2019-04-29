@@ -16,6 +16,9 @@ using Windows.UI.Core;
 
 namespace Oxford_Translator_UWP.ViewModels
 {
+    /// <summary>
+    /// View Model of the Translator page
+    /// </summary>
     public class TranslatorPageViewModel : ViewModelBase
     {
         private IOxfordApiWrapper wrapper;
@@ -26,6 +29,7 @@ namespace Oxford_Translator_UWP.ViewModels
         private Language selectedSource;
         private Language selectedTarget;
         private bool isReady;
+
 
         public List<Language> SourceLanguages {
             get => sourceLanguages;
@@ -82,6 +86,11 @@ namespace Oxford_Translator_UWP.ViewModels
             SelectedTarget = tmp;
         }
 
+        /// <summary>
+        /// Gets the translation of the entered word through the wrapper. 
+        /// Displays an error message in the list if the lookup fails.
+        /// Gets the word root in order to give suggestions on error.
+        /// </summary>
         private async void TranslateWordAsync()
         {
             IsReady = false;
@@ -124,6 +133,9 @@ namespace Oxford_Translator_UWP.ViewModels
             IsReady = true;
         }
 
+        /// <summary>
+        /// When the user selects a translation source language, this function sets the list of target languages to those that are supported.
+        /// </summary>
         private void SetAvailableTargetLanguages()
         {
             if(availableDictionaries == null || SelectedSource?.Id == null)
@@ -137,6 +149,9 @@ namespace Oxford_Translator_UWP.ViewModels
             TargetLanguages = result;
         }
 
+        /// <summary>
+        /// Downloads the available languages if they are not loaded yet.
+        /// </summary>
         private async Task LoadLanguagesAsync()
         {
             if(availableDictionaries?.Count > 0)
@@ -148,7 +163,7 @@ namespace Oxford_Translator_UWP.ViewModels
                 availableDictionaries = await wrapper.GetDictionaries();
             } catch (Exception)
             {
-                dialogService.ShowError("Could not get available dictionaries. Please check your internet connection and restart the application.");
+                await dialogService.ShowError("Could not get available dictionaries. Please check your internet connection and restart the application.");
                 return;
             }
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>

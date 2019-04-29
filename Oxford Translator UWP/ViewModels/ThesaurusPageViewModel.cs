@@ -146,6 +146,9 @@ namespace Oxford_Translator_UWP.ViewModels
             IsReady = true;
         }
 
+        /// <summary>
+        /// Downloads the available languages if they are not loaded yet.
+        /// </summary>
         private async Task LoadLanguagesAsync()
         {
             List<OxfordDictionary> availableDictionaries;
