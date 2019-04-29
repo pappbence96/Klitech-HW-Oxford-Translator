@@ -9,9 +9,10 @@ using OxfordAPIWrapper.Objects;
 
 namespace OxfordAPIWrapper
 {
-    class OxfordApiWrapper
+    public class OxfordApiWrapper : IOxfordApiWrapper
     {
         private string baseUrl = "https://od-api.oxforddictionaries.com/api/v1";
+        private List<OxfordDictionary> availableDictionaries;
         public string AppKey { get; private set; }
         public string AppId { get; private set; }
 
@@ -21,14 +22,25 @@ namespace OxfordAPIWrapper
             AppId = appId;
         }
 
+        public OxfordApiWrapper()
+        {
+            AppKey = SecretStore.APP_KEY;
+            AppId = SecretStore.APP_ID;
+        }
+
         private async Task<string> GetResponseString(string url)
         {
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("app_id", AppId);
                 client.DefaultRequestHeaders.Add("app_key", AppKey);
-                var response = client.GetAsync(url);
-                var responseContent = await response.Result.Content.ReadAsStringAsync();
+                var response = await Task.Run(() => client.GetAsync(url));
+                //Resource was most probably not found
+                if (!response.IsSuccessStatusCode)
+                {
+                    return "";
+                }
+                var responseContent = await response.Content.ReadAsStringAsync();
                 return responseContent;
             }
         }
@@ -38,11 +50,20 @@ namespace OxfordAPIWrapper
             List<string> translations = new List<string>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/entries/{sourceLanguage}/{word}/translations={targetLanguage}");
             string response = await GetResponseString(targetUrl);
+            if (String.IsNullOrWhiteSpace(response))
+            {
+                return translations;
+            }
             var jObject = JObject.Parse(response);
+            foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].entries[*].senses[*].translations[*].text"))
+            {
+                translations.Add(token.ToString());
+            }
             foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].entries[*].senses[*].subsenses[*].translations[*].text"))
             {
                 translations.Add(token.ToString());
             }
+
             return translations;
         }
 
@@ -51,6 +72,10 @@ namespace OxfordAPIWrapper
             List<string> lemmas = new List<string>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/inflections/{language}/{word}");
             string response = await GetResponseString(targetUrl);
+            if (String.IsNullOrWhiteSpace(response))
+            {
+                return lemmas;
+            }
             var jObject = JObject.Parse(response);
             foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].inflectionOf[*].text"))
             {
@@ -64,6 +89,10 @@ namespace OxfordAPIWrapper
             List<string> examples = new List<string>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/entries/{language}/{word}/examples");
             string response = await GetResponseString(targetUrl);
+            if (String.IsNullOrWhiteSpace(response))
+            {
+                return examples;
+            }
             var jObject = JObject.Parse(response);
             foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].entries[*].senses[*].examples[*].text"))
             {
@@ -81,6 +110,10 @@ namespace OxfordAPIWrapper
             List<string> synonyms = new List<string>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/entries/{language}/{word}/synonyms");
             string response = await GetResponseString(targetUrl);
+            if (String.IsNullOrWhiteSpace(response))
+            {
+                return synonyms;
+            }
             var jObject = JObject.Parse(response);
             foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].entries[*].senses[*].synonyms[*].text"))
             {
@@ -98,6 +131,10 @@ namespace OxfordAPIWrapper
             List<string> antonyms = new List<string>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/entries/{language}/{word}/antonyms");
             string response = await GetResponseString(targetUrl);
+            if (String.IsNullOrWhiteSpace(response))
+            {
+                return antonyms;
+            }
             var jObject = JObject.Parse(response);
             foreach (var token in jObject.SelectTokens("results[*].lexicalEntries[*].entries[*].senses[*].antonyms[*].text"))
             {
@@ -112,17 +149,22 @@ namespace OxfordAPIWrapper
 
         public async Task<List<OxfordDictionary>> GetDictionaries()
         {
+            if (availableDictionaries != null)
+            {
+                return availableDictionaries;
+            }
             var dicts = new List<OxfordDictionary>();
             var targetUrl = Flurl.Url.Combine(baseUrl, $"/languages");
             string response = await GetResponseString(targetUrl);
             var jObject = JObject.Parse(response);
             foreach (var token in jObject.SelectTokens("results[*]"))
             {
-                if(token["type"].ToString() == "bilingual")
+                if (token["type"].ToString() == "bilingual")
                 {
                     dicts.Add(JsonConvert.DeserializeObject<OxfordDictionary>(token.ToString()));
                 }
             }
+            availableDictionaries = dicts;
             return dicts;
         }
 

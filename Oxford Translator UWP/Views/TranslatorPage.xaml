@@ -1,0 +1,62 @@
+﻿<prism:SessionStateAwarePage
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    x:Class="Oxford_Translator_UWP.Views.TranslatorPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Oxford_Translator_UWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <!-- https://social.msdn.microsoft.com/Forums/windowsapps/en-US/9d00d508-af1f-4b61-9d4a-c2999900c045/uwp-sticky-listviewheader?forum=wpdevelop -->
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Oxford Dictionaries - Translator" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource HeaderTextBlockStyle}"/>
+
+        <ComboBox ItemsSource="{Binding SourceLanguages}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedSource, Mode=TwoWay}"
+                  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="20, 0" Header="Source language"
+                  Height="56" Text="Loading...">
+            <Interactivity:Interaction.Behaviors>
+                <Interactions:EventTriggerBehavior EventName="SelectionChanged">
+                    <Interactions:InvokeCommandAction Command="{Binding SourceSelectedCommand}"/>
+                </Interactions:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </ComboBox>
+
+        <ComboBox ItemsSource="{Binding TargetLanguages}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedTarget, Mode=TwoWay}"
+                  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="20, 0" Header="Target language"
+                  Height="56"/>
+        
+        <Button Command="{Binding SwitchLanguagesCommand}"
+                Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20,0">
+            <SymbolIcon Symbol="Switch"/>
+        </Button>
+
+        <TextBox Text="{Binding SourceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Word to translate" 
+                Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="20,0" Height="56"/>
+
+        <ListView ItemsSource="{Binding ResultTranslations, Mode=TwoWay}" Style="{StaticResource FixedHeaderListViewStyle}"
+                Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0, 20, 20" 
+                ScrollViewer.VerticalScrollBarVisibility="Visible" Header="Translation(s)">
+        </ListView>
+
+        <Button Content="Translate" Command="{Binding TranslateCommand}"
+                Grid.Row="2" Grid.Column="1" Margin="20, 24" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    </Grid>
+</prism:SessionStateAwarePage>

@@ -1,0 +1,65 @@
+﻿<prism:SessionStateAwarePage
+    xmlns:prism="using:Prism.Windows.Mvvm"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    x:Class="Oxford_Translator_UWP.Views.ThesaurusPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Oxford_Translator_UWP.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Oxford Dictionaries - Thesaurus" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource HeaderTextBlockStyle}"/>
+        
+
+        <TextBox Header="Word to search" Text="{Binding SearchedWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="56" Margin="20, 0"/>
+        
+        <ComboBox ItemsSource="{Binding AvailableLanguages}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="20,0" Header="Source language"
+                  Height="56" Text="Loading...">
+            <Interactivity:Interaction.Behaviors>
+                <Interactions:EventTriggerBehavior EventName="SelectionChanged">
+                    <Interactions:InvokeCommandAction Command="{Binding SourceSelectedCommand}"/>
+                </Interactions:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </ComboBox>
+        
+        <Grid Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="20, 0" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Command="{Binding ExampleCommand}"
+                Grid.Column="0" Content="Examples" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 12"/>
+            <Button Command="{Binding SynonymCommand}"
+                Grid.Column="1" Content="Synonyms" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="12, 12"/>
+            <Button Command="{Binding AntonymCommand}"
+                Grid.Column="2" Content="Antonyms" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 12"/>
+        </Grid>
+
+        <ListView ItemsSource="{Binding ThesaurusWords, Mode=TwoWay}"  Style="{StaticResource FixedHeaderListViewStyle}"
+                  Margin="20,0, 20, 20" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" Header="Thesaurus search results"/>
+
+    </Grid>
+</prism:SessionStateAwarePage>
