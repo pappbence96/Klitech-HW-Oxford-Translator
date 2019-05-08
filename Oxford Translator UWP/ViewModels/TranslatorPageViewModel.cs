@@ -23,6 +23,7 @@ namespace Oxford_Translator_UWP.ViewModels
     {
         private IOxfordApiWrapper wrapper;
         private IDialogService dialogService;
+        private ISaveUtility saveUtility;
         private List<OxfordDictionary> availableDictionaries;
         private List<Language> sourceLanguages = new List<Language>();
         private List<Language> targetLanguages = new List<Language>();
@@ -58,20 +59,43 @@ namespace Oxford_Translator_UWP.ViewModels
         public ICommand SourceSelectedCommand { get; private set; }
         public ICommand TranslateCommand { get; private set; }
         public ICommand SwitchLanguagesCommand { get; private set; }
+        public ICommand SaveCommand { get; }
+        public ICommand ClearCommand { get; private set; }
 
-        public TranslatorPageViewModel(IOxfordApiWrapper wrapper, IDialogService dialogService) {
+        public TranslatorPageViewModel(IOxfordApiWrapper wrapper, IDialogService dialogService, ISaveUtility saveUtility) {
             this.wrapper = wrapper;
             this.dialogService = dialogService;
+            this.saveUtility = saveUtility;
             SourceSelectedCommand = new DelegateCommand(SetAvailableTargetLanguages);
             TranslateCommand = new DelegateCommand(TranslateWordAsync, CanTranslate)
                 .ObservesProperty(() => IsReady)
                 .ObservesProperty(() => SelectedSource)
                 .ObservesProperty(() => SelectedTarget);
             SwitchLanguagesCommand = new DelegateCommand(SwitchLanguages);
+            SaveCommand = new DelegateCommand(SaveResultsToFile, CanTranslate)
+                .ObservesProperty(() => IsReady)
+                .ObservesProperty(() => SelectedSource)
+                .ObservesProperty(() => SelectedTarget);
+            ClearCommand = new DelegateCommand(() => ResultTranslations.Clear());
             ResultTranslations = new ObservableCollection<string>();
             IsReady = true;
         }
 
+        /// <summary>
+        /// Saves the page state to file
+        /// </summary>
+        private void SaveResultsToFile()
+        {
+            var text = new List<string>();
+            text.Add($"Translations of the word '{SourceText}' from {SelectedSource.Name} to {SelectedTarget.Name}");
+            text.AddRange(ResultTranslations);
+            saveUtility.SaveToFile(text, $"{SourceText}_{SelectedSource.Id}-{SelectedTarget.Id}.txt");
+        }
+
+        /// <summary>
+        /// Determines whether the translation can be performed
+        /// </summary>
+        /// <returns></returns>
         private bool CanTranslate()
         {
             return (SelectedSource != null)
@@ -79,6 +103,9 @@ namespace Oxford_Translator_UWP.ViewModels
                 && IsReady;
         }
 
+        /// <summary>
+        /// Switches the selected target and source languages
+        /// </summary>
         private void SwitchLanguages()
         {
             var tmp = SelectedSource;

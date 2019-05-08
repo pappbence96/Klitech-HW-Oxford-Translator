@@ -31,17 +31,12 @@
 
         <TextBox Header="Word to search" Text="{Binding SearchedWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="56" Margin="20, 0"/>
-        
+
         <ComboBox ItemsSource="{Binding AvailableLanguages}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
                   Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="20,0" Header="Source language"
-                  Height="56" Text="Loading...">
-            <Interactivity:Interaction.Behaviors>
-                <Interactions:EventTriggerBehavior EventName="SelectionChanged">
-                    <Interactions:InvokeCommandAction Command="{Binding SourceSelectedCommand}"/>
-                </Interactions:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
-        </ComboBox>
-        
+                  Height="56" Text="Loading..."/>
+
+
         <Grid Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="20, 0" HorizontalAlignment="Right">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -59,7 +54,14 @@
 
         <ListView ItemsSource="{Binding ThesaurusWords, Mode=TwoWay}"  Style="{StaticResource FixedHeaderListViewStyle}"
                   Margin="20,0, 20, 20" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible" Header="Thesaurus search results"/>
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" Header="Thesaurus search results">
+            <ListView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Clear" Command="{Binding ClearCommand}"/>
+                    <MenuFlyoutItem Text="Save" Command="{Binding SaveCommand}"/>
+                </MenuFlyout>
+            </ListView.ContextFlyout>
+        </ListView>
 
     </Grid>
 </prism:SessionStateAwarePage>

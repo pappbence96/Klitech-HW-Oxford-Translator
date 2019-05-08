@@ -15,7 +15,7 @@ namespace OxfordAPIWrapper
             //var examples = await wrapper.GetExamples("infect", "en");
             //var synonyms = await wrapper.GetSynonyms("cool", "en");
             //var antonyms = await wrapper.GetAntonyms("cool", "en");
-            var dicts = await wrapper.GetDictionaries();
+            //var dicts = await wrapper.GetDictionaries();
             ;
         }
     }

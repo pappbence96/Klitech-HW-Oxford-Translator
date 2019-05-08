@@ -38,6 +38,7 @@ namespace Oxford_Translator_UWP
         {
             Container.RegisterType<IOxfordApiWrapper, OxfordApiWrapper>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IDialogService, DialogService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ISaveUtility, SaveUtility>(new ContainerControlledLifetimeManager());
             return Task.FromResult<object>(null);
         }
 

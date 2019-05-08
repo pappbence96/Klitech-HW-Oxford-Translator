@@ -54,6 +54,12 @@
         <ListView ItemsSource="{Binding ResultTranslations, Mode=TwoWay}" Style="{StaticResource FixedHeaderListViewStyle}"
                 Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0, 20, 20" 
                 ScrollViewer.VerticalScrollBarVisibility="Visible" Header="Translation(s)">
+            <ListView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Clear" Command="{Binding ClearCommand}"/>
+                    <MenuFlyoutItem Text="Save" Command="{Binding SaveCommand}"/>
+                </MenuFlyout>
+            </ListView.ContextFlyout>
         </ListView>
 
         <Button Content="Translate" Command="{Binding TranslateCommand}"
